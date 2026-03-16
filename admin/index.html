@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Monk Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --orange: #ff6600;
+        --orange-light: #fff5f0;
+        --orange-dark: #e55500;
+        --dark: #1a1a2e;
+        --sidebar: #16213e;
+        --card: #ffffff;
+        --text: #333;
+        --text-light: #888;
+        --border: #e8e8e8;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f4f6f9;
+        color: var(--text);
+      }
+
+      /* ─── Login Screen ───── */
+      .login-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--dark), var(--sidebar));
+      }
+      .login-card {
+        background: white;
+        border-radius: 20px;
+        padding: 48px;
+        width: 420px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      }
+      .login-card h1 {
+        font-size: 24px;
+        font-weight: 900;
+        margin-bottom: 8px;
+      }
+      .login-card h1 span {
+        color: var(--orange);
+      }
+      .login-card p {
+        color: var(--text-light);
+        margin-bottom: 32px;
+        font-size: 14px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text);
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+        outline: none;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: var(--orange);
+      }
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-primary {
+        background: var(--orange);
+        color: white;
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
+        font-size: 15px;
+      }
+      .btn-primary:hover {
+        background: var(--orange-dark);
+        transform: translateY(-1px);
+      }
+      .btn-sm {
+        padding: 8px 16px;
+        font-size: 12px;
+        border-radius: 8px;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 2px solid var(--border);
+        color: var(--text);
+      }
+      .btn-outline:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .btn-danger {
+        background: var(--danger);
+        color: white;
+      }
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+      .btn-success {
+        background: var(--success);
+        color: white;
+      }
+      .btn-success:hover {
+        background: #059669;
+      }
+      .error-msg {
+        color: var(--danger);
+        font-size: 13px;
+        margin-top: 8px;
+      }
+
+      /* ─── Dashboard Layout ───── */
+      .dashboard {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 260px;
+        background: var(--dark);
+        color: white;
+        padding: 24px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 100;
+      }
+      .sidebar-brand {
+        padding: 0 24px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 16px;
+      }
+      .sidebar-brand h2 {
+        font-size: 20px;
+        font-weight: 900;
+      }
+      .sidebar-brand h2 span {
+        color: var(--orange);
+      }
+      .sidebar-brand small {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 11px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 24px;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .nav-item.active {
+        color: var(--orange);
+        background: rgba(255, 102, 0, 0.1);
+        border-left-color: var(--orange);
+      }
+      .nav-item .badge {
+        margin-left: auto;
+        background: var(--danger);
+        color: white;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-weight: 700;
+      }
+      .nav-section {
+        padding: 12px 24px 6px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .main-content {
+        margin-left: 260px;
+        flex: 1;
+        padding: 32px;
+        min-height: 100vh;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+      }
+      .topbar h1 {
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .topbar-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .user-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: white;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+      }
+      .user-badge .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+      }
+
+      /* ─── Stats Cards ───── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+      }
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid var(--border);
+      }
+      .stat-card .label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+      }
+      .stat-card .value {
+        font-size: 36px;
+        font-weight: 900;
+        color: var(--dark);
+      }
+      .stat-card .sub {
+        font-size: 12px;
+        color: var(--success);
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .stat-card.highlight {
+        background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+        color: white;
+      }
+      .stat-card.highlight .label,
+      .stat-card.highlight .value,
+      .stat-card.highlight .sub {
+        color: white;
+      }
+
+      /* ─── Table ───── */
+      .card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      .card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .card-header h3 {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .card-body {
+        padding: 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        text-align: left;
+        padding: 14px 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-light);
+        background: #fafafa;
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 14px 20px;
+        font-size: 13px;
+        border-bottom: 1px solid #f5f5f5;
+        vertical-align: middle;
+      }
+      tr:hover td {
+        background: #fafafa;
+      }
+      .tag {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .tag-web {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+      .tag-marketing {
+        background: #fef3c7;
+        color: #d97706;
+      }
+      .tag-design {
+        background: #fce7f3;
+        color: #db2777;
+      }
+      .tag-active {
+        background: #d1fae5;
+        color: #059669;
+      }
+      .tag-inactive {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .tag-new {
+        background: var(--orange-light);
+        color: var(--orange);
+      }
+      .actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      /* ─── Modal ───── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+      }
+      .modal {
+        background: white;
+        border-radius: 20px;
+        width: 600px;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+      }
+      .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .modal-header h3 {
+        font-size: 18px;
+        font-weight: 800;
+      }
+      .modal-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: none;
+        background: #f5f5f5;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-close:hover {
+        background: var(--danger);
+        color: white;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .modal-footer {
+        padding: 16px 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--dark);
+        color: white;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 2000;
+        animation: slideUp 0.3s ease;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .toast.success {
+        background: var(--success);
+      }
+      .toast.error {
+        background: var(--danger);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 60px;
+        }
+        .sidebar-brand h2,
+        .sidebar-brand small,
+        .nav-item span,
+        .nav-section {
+          display: none;
+        }
+        .nav-item {
+          justify-content: center;
+          padding: 12px;
+        }
+        .main-content {
+          margin-left: 60px;
+          padding: 16px;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .modal {
+          width: 95%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+    <div id="loginScreen" class="login-screen">
+      <div class="login-card">
+        <h1>Creative <span>Monk</span></h1>
+        <p>Admin Dashboard — Sign in to manage your website content</p>
+        <form id="loginForm">
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="admin@thecreativemonk.in"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+          <div id="loginError" class="error-msg hidden"></div>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="margin-top: 12px"
+          >
+            Sign In →
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
+    <div id="dashboardScreen" class="dashboard hidden">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <h2>Creative <span>Monk</span></h2>
+          <small>Admin Dashboard v1.0</small>
+        </div>
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active" data-page="dashboard">
+          📊 <span>Dashboard</span>
+        </div>
+        <div class="nav-section">Content</div>
+        <div class="nav-item" data-page="services">
+          🌐 <span>Services</span>
+        </div>
+        <div class="nav-item" data-page="portfolio">
+          🎨 <span>Portfolio</span>
+        </div>
+        <div class="nav-item" data-page="blogs">📝 <span>Blog Posts</span></div>
+        <div class="nav-item" data-page="testimonials">
+          ⭐ <span>Testimonials</span>
+        </div>
+        <div class="nav-section">Operations</div>
+        <div class="nav-item" data-page="enquiries">
+          📩 <span>Enquiries</span>
+          <span class="badge" id="enquiryBadge">0</span>
+        </div>
+        <div class="nav-item" data-page="careers">💼 <span>Careers</span></div>
+        <div class="nav-section">Account</div>
+        <div class="nav-item" id="logoutBtn">🚪 <span>Logout</span></div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="topbar">
+          <h1 id="pageTitle">Dashboard</h1>
+          <div class="topbar-actions">
+            <button class="btn btn-primary btn-sm hidden" id="addNewBtn">
+              + Add New
+            </button>
+            <div class="user-badge">
+              <div class="dot"></div>
+              Admin
+            </div>
+          </div>
+        </div>
+        <div id="pageContent"></div>
+      </main>
+    </div>
+
+    <!-- ═══════════════ MODAL ═══════════════ -->
+    <div id="modal" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="modalTitle">Edit Item</h3>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+          <button class="btn btn-outline btn-sm" onclick="closeModal()">
+            Cancel
+          </button>
+          <button class="btn btn-primary btn-sm" id="modalSave">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API = window.location.origin + "/api";
+      let token = localStorage.getItem("cm_token");
+      let currentPage = "dashboard";
+
+      // ─── Auth ──────────────────────────────────────────────────────────
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+          try {
+            const res = await fetch(`${API}/auth/login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+              token = data.token;
+              localStorage.setItem("cm_token", token);
+              showDashboard();
+            } else {
+              document.getElementById("loginError").textContent = data.error;
+              document.getElementById("loginError").classList.remove("hidden");
+            }
+          } catch (err) {
+            document.getElementById("loginError").textContent =
+              "Server error. Is the backend running?";
+            document.getElementById("loginError").classList.remove("hidden");
+          }
+        });
+
+      function logout() {
+        token = null;
+        localStorage.removeItem("cm_token");
+        document.getElementById("loginScreen").classList.remove("hidden");
+        document.getElementById("dashboardScreen").classList.add("hidden");
+      }
+
+      function showDashboard() {
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("dashboardScreen").classList.remove("hidden");
+        navigateTo("dashboard");
+      }
+
+      // Auto-login check
+      if (token) {
+        fetch(`${API}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((r) => (r.ok ? showDashboard() : logout()))
+          .catch(() => logout());
+      }
+
+      // ─── Navigation ─────────────────────────────────────────────────────
+      document.querySelectorAll(".nav-item[data-page]").forEach((item) => {
+        item.addEventListener("click", () => navigateTo(item.dataset.page));
+      });
+      document.getElementById("logoutBtn").addEventListener("click", logout);
+
+      const pageTitles = {
+        dashboard: "Dashboard",
+        services: "Services",
+        portfolio: "Portfolio",
+        blogs: "Blog Posts",
+        testimonials: "Testimonials",
+        enquiries: "Enquiries",
+        careers: "Career Openings",
+      };
+
+      function navigateTo(page) {
+        currentPage = page;
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document
+          .querySelector(`.nav-item[data-page="${page}"]`)
+          ?.classList.add("active");
+        document.getElementById("pageTitle").textContent =
+          pageTitles[page] || page;
+        const addBtn = document.getElementById("addNewBtn");
+        addBtn.classList.toggle(
+          "hidden",
+          page === "dashboard" || page === "enquiries",
+        );
+        addBtn.onclick = () => openAddModal(page);
+        loadPage(page);
+      }
+
+      // ─── API Helpers ────────────────────────────────────────────────────
+      async function apiGet(endpoint) {
+        const res = await fetch(`${API}/${endpoint}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.json();
+      }
+      async function apiPost(endpoint, body) {
+        const res = await fetch(`${API}/${endpoint}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        });
+        return res.json();
+      }
+      async function apiPut(endpoint, id, body) {
+        const res = await fetch(`${API}/${endpoint}/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        });
+        return res.json();
+      }
+      async function apiDelete(endpoint, id) {
+        const res = await fetch(`${API}/${endpoint}/${id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return res.json();
+      }
+
+      // ─── Toast ──────────────────────────────────────────────────────────
+      function toast(msg, type = "success") {
+        const t = document.createElement("div");
+        t.className = `toast ${type}`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      // ─── Load Pages ─────────────────────────────────────────────────────
+      async function loadPage(page) {
+        const container = document.getElementById("pageContent");
+        if (page === "dashboard") return loadDashboard(container);
+        if (page === "services")
+          return loadTable(
+            container,
+            "services",
+            ["title", "category", "active"],
+            "id",
+          );
+        if (page === "portfolio")
+          return loadTable(
+            container,
+            "portfolio",
+            ["title", "category", "client", "active"],
+            "id",
+          );
+        if (page === "blogs")
+          return loadTable(
+            container,
+            "blogs",
+            ["title", "category", "date", "featured", "active"],
+            "slug",
+          );
+        if (page === "testimonials")
+          return loadTable(
+            container,
+            "testimonials",
+            ["name", "company", "rating", "active"],
+            "id",
+          );
+        if (page === "enquiries")
+          return loadTable(
+            container,
+            "enquiries",
+            ["name", "email", "phone", "status", "createdAt"],
+            "id",
+          );
+        if (page === "careers")
+          return loadTable(
+            container,
+            "careers",
+            ["title", "department", "type", "active"],
+            "id",
+          );
+      }
+
+      async function loadDashboard(container) {
+        const stats = await apiGet("stats");
+        container.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card highlight"><div class="label">Total Services</div><div class="value">${stats.services}</div><div class="sub">Active offerings</div></div>
+      <div class="stat-card"><div class="label">Portfolio</div><div class="value">${stats.portfolio}</div><div class="sub">Projects showcased</div></div>
+      <div class="stat-card"><div class="label">Blog Posts</div><div class="value">${stats.blogs}</div><div class="sub">Published articles</div></div>
+      <div class="stat-card"><div class="label">Testimonials</div><div class="value">${stats.testimonials}</div><div class="sub">Happy clients</div></div>
+      <div class="stat-card ${stats.newEnquiries > 0 ? "highlight" : ""}"><div class="label">New Enquiries</div><div class="value">${stats.newEnquiries}</div><div class="sub">${stats.enquiries} total</div></div>
+      <div class="stat-card"><div class="label">Open Positions</div><div class="value">${stats.careers}</div><div class="sub">Active listings</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Quick Actions</h3></div>
+      <div style="padding:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;">
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('services')">📋 Manage Services</button>
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('portfolio')">🎨 Manage Portfolio</button>
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('blogs')">📝 Manage Blog</button>
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('testimonials')">⭐ Testimonials</button>
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('enquiries')">📩 View Enquiries</button>
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('careers')">💼 Manage Careers</button>
+      </div>
+    </div>`;
+        document.getElementById("enquiryBadge").textContent =
+          stats.newEnquiries || "0";
+      }
+
+      async function loadTable(container, resource, columns, idField) {
+        const data = await apiGet(resource);
+        const catTag = (v) => {
+          if (v === "web") return '<span class="tag tag-web">Web</span>';
+          if (v === "marketing")
+            return '<span class="tag tag-marketing">Marketing</span>';
+          if (v === "design")
+            return '<span class="tag tag-design">Design</span>';
+          if (v === true) return '<span class="tag tag-active">Yes</span>';
+          if (v === false) return '<span class="tag tag-inactive">No</span>';
+          if (v === "new") return '<span class="tag tag-new">New</span>';
+          if (v === "responded")
+            return '<span class="tag tag-active">Responded</span>';
+          return v ?? "—";
+        };
+
+        container.innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3>${data.length} ${resource}</h3></div>
+      <div class="card-body" style="overflow-x:auto;">
+        <table>
+          <thead><tr>${columns.map((c) => `<th>${c}</th>`).join("")}<th>Actions</th></tr></thead>
+          <tbody>
+            ${data
+              .map(
+                (item) => `
+              <tr>
+                ${columns.map((c) => `<td>${catTag(item[c])}</td>`).join("")}
+                <td class="actions">
+                  <button class="btn btn-outline btn-sm" onclick="openEditModal('${resource}','${item[idField]}')">Edit</button>
+                  ${resource !== "enquiries" ? `<button class="btn btn-danger btn-sm" onclick="deleteItem('${resource}','${item[idField]}')">Del</button>` : `<button class="btn btn-success btn-sm" onclick="markResponded('${resource}','${item[idField]}')">✓</button>`}
+                </td>
+              </tr>
+            `,
+              )
+              .join("")}
+          </tbody>
+        </table>
+        ${data.length === 0 ? '<p style="padding:40px;text-align:center;color:#888;">No items yet</p>' : ""}
+      </div>
+    </div>`;
+      }
+
+      // ─── CRUD Operations ────────────────────────────────────────────────
+      async function deleteItem(resource, id) {
+        if (!confirm("Are you sure you want to delete this item?")) return;
+        await apiDelete(resource, id);
+        toast("Item deleted");
+        loadPage(currentPage);
+      }
+
+      async function markResponded(resource, id) {
+        await apiPut(resource, id, { status: "responded" });
+        toast("Marked as responded");
+        loadPage(currentPage);
+      }
+
+      // ─── Modal Forms ────────────────────────────────────────────────────
+      function closeModal() {
+        document.getElementById("modal").classList.add("hidden");
+      }
+
+      const fieldDefs = {
+        services: [
+          { key: "id", label: "Slug ID", type: "text", required: true },
+          { key: "title", label: "Title", type: "text", required: true },
+          { key: "shortTitle", label: "Short Title", type: "text" },
+          { key: "tagline", label: "Tagline", type: "text" },
+          { key: "description", label: "Short Description", type: "textarea" },
+          {
+            key: "longDescription",
+            label: "Long Description",
+            type: "textarea",
+          },
+          {
+            key: "category",
+            label: "Category",
+            type: "select",
+            options: ["web", "marketing", "design"],
+          },
+          { key: "image", label: "Image URL", type: "text" },
+          {
+            key: "features",
+            label: "Features (comma-separated)",
+            type: "textarea",
+          },
+          {
+            key: "active",
+            label: "Active",
+            type: "select",
+            options: ["true", "false"],
+          },
+        ],
+        portfolio: [
+          { key: "id", label: "ID", type: "text", required: true },
+          { key: "title", label: "Title", type: "text", required: true },
+          {
+            key: "category",
+            label: "Category",
+            type: "select",
+            options: [
+              "Web Development",
+              "Branding",
+              "SEO",
+              "Social Media",
+              "Graphic Design",
+            ],
+          },
+          { key: "image", label: "Image URL", type: "text" },
+          { key: "tags", label: "Tags (comma-separated)", type: "text" },
+          { key: "description", label: "Description", type: "textarea" },
+          { key: "client", label: "Client Name", type: "text" },
+          {
+            key: "active",
+            label: "Active",
+            type: "select",
+            options: ["true", "false"],
+          },
+        ],
+        blogs: [
+          { key: "slug", label: "Slug", type: "text", required: true },
+          { key: "title", label: "Title", type: "text", required: true },
+          { key: "excerpt", label: "Excerpt", type: "textarea" },
+          {
+            key: "category",
+            label: "Category",
+            type: "select",
+            options: [
+              "SEO",
+              "Web Development",
+              "Social Media",
+              "Branding",
+              "Digital Marketing",
+            ],
+          },
+          { key: "date", label: "Date", type: "text" },
+          { key: "readTime", label: "Read Time", type: "text" },
+          { key: "image", label: "Image URL", type: "text" },
+          { key: "author", label: "Author", type: "text" },
+          {
+            key: "featured",
+            label: "Featured",
+            type: "select",
+            options: ["true", "false"],
+          },
+          {
+            key: "active",
+            label: "Active",
+            type: "select",
+            options: ["true", "false"],
+          },
+        ],
+        testimonials: [
+          { key: "id", label: "ID", type: "text", required: true },
+          { key: "name", label: "Client Name", type: "text", required: true },
+          { key: "role", label: "Role", type: "text" },
+          { key: "company", label: "Company", type: "text" },
+          { key: "text", label: "Testimonial Text", type: "textarea" },
+          { key: "rating", label: "Rating (1-5)", type: "text" },
+          {
+            key: "active",
+            label: "Active",
+            type: "select",
+            options: ["true", "false"],
+          },
+        ],
+        enquiries: [
+          { key: "name", label: "Name", type: "text", readonly: true },
+          { key: "email", label: "Email", type: "text", readonly: true },
+          { key: "phone", label: "Phone", type: "text", readonly: true },
+          {
+            key: "message",
+            label: "Message",
+            type: "textarea",
+            readonly: true,
+          },
+          {
+            key: "service",
+            label: "Service Interest",
+            type: "text",
+            readonly: true,
+          },
+          {
+            key: "status",
+            label: "Status",
+            type: "select",
+            options: ["new", "responded", "closed"],
+          },
+        ],
+        careers: [
+          { key: "id", label: "ID", type: "text", required: true },
+          { key: "title", label: "Job Title", type: "text", required: true },
+          { key: "department", label: "Department", type: "text" },
+          {
+            key: "type",
+            label: "Type (Full-Time/Part-Time/Intern)",
+            type: "text",
+          },
+          { key: "location", label: "Location", type: "text" },
+          { key: "experience", label: "Experience", type: "text" },
+          { key: "description", label: "Description", type: "textarea" },
+          {
+            key: "active",
+            label: "Active",
+            type: "select",
+            options: ["true", "false"],
+          },
+        ],
+      };
+
+      function renderForm(resource, data = {}) {
+        const fields = fieldDefs[resource] || [];
+        return fields
+          .map((f) => {
+            let val = data[f.key] ?? "";
+            if (Array.isArray(val)) val = val.join(", ");
+            if (typeof val === "boolean") val = String(val);
+            const readonly = f.readonly ? "readonly" : "";
+            if (f.type === "textarea") {
+              return `<div class="form-group"><label>${f.label}</label><textarea id="field_${f.key}" rows="3" ${readonly}>${val}</textarea></div>`;
+            }
+            if (f.type === "select") {
+              return `<div class="form-group"><label>${f.label}</label><select id="field_${f.key}" ${readonly}>${f.options.map((o) => `<option value="${o}" ${String(val) === o ? "selected" : ""}>${o}</option>`).join("")}</select></div>`;
+            }
+            return `<div class="form-group"><label>${f.label}</label><input type="${f.type}" id="field_${f.key}" value="${val}" ${f.required ? "required" : ""} ${readonly}></div>`;
+          })
+          .join("");
+      }
+
+      function getFormData(resource) {
+        const fields = fieldDefs[resource] || [];
+        const data = {};
+        fields.forEach((f) => {
+          let val = document.getElementById(`field_${f.key}`)?.value;
+          if (f.key === "features" || f.key === "tags")
+            val = val ? val.split(",").map((s) => s.trim()) : [];
+          if (f.key === "active" || f.key === "featured") val = val === "true";
+          if (f.key === "rating") val = parseInt(val) || 5;
+          data[f.key] = val;
+        });
+        return data;
+      }
+
+      async function openEditModal(resource, id) {
+        const item = await apiGet(`${resource}/${id}`);
+        document.getElementById("modalTitle").textContent =
+          `Edit ${resource.slice(0, -1)}`;
+        document.getElementById("modalBody").innerHTML = renderForm(
+          resource,
+          item,
+        );
+        document.getElementById("modalSave").onclick = async () => {
+          const data = getFormData(resource);
+          const idField = resource === "blogs" ? "slug" : "id";
+          await apiPut(resource, item[idField], data);
+          toast("Updated successfully!");
+          closeModal();
+          loadPage(currentPage);
+        };
+        document.getElementById("modal").classList.remove("hidden");
+      }
+
+      function openAddModal(resource) {
+        document.getElementById("modalTitle").textContent =
+          `Add New ${resource.slice(0, -1)}`;
+        document.getElementById("modalBody").innerHTML = renderForm(
+          resource,
+          {},
+        );
+        document.getElementById("modalSave").onclick = async () => {
+          const data = getFormData(resource);
+          await apiPost(resource, data);
+          toast("Created successfully!");
+          closeModal();
+          loadPage(currentPage);
+        };
+        document.getElementById("modal").classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>
