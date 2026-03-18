@@ -1,12 +1,32 @@
-const mongoose = require('mongoose');
+const createSqliteModel = require("./createSqliteModel");
+const { asString, pickEnum } = require("./shared");
 
-const EnquirySchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String },
-    service: { type: String },
-    message: { type: String, required: true },
-    status: { type: String, enum: ['new', 'read', 'archived'], default: 'new' }
-}, { timestamps: true });
-
-module.exports = mongoose.model('Enquiry', EnquirySchema);
+module.exports = createSqliteModel({
+  tableName: "enquiries",
+  columns: {
+    name: "TEXT",
+    email: "TEXT",
+    phone: "TEXT",
+    service: "TEXT",
+    message: "TEXT",
+    sourcePage: "TEXT",
+    status: "TEXT",
+    notes: "TEXT",
+  },
+  indexFields: ["email", "service", "sourcePage", "status", "createdAt"],
+  defaultSort: {
+    createdAt: -1,
+  },
+  normalize(payload = {}) {
+    return {
+      name: asString(payload.name),
+      email: asString(payload.email).toLowerCase(),
+      phone: asString(payload.phone),
+      service: asString(payload.service),
+      message: asString(payload.message),
+      sourcePage: asString(payload.sourcePage, "contact"),
+      status: pickEnum(payload.status, ["new", "in-progress", "responded", "archived"], "new"),
+      notes: asString(payload.notes),
+    };
+  },
+});
