@@ -232,6 +232,23 @@ function normalizeSectionToggles(value) {
   };
 }
 
+function normalizeServiceDetailContent(value) {
+  const detail = asObject(value);
+  return {
+    heroEyebrow: asString(detail.heroEyebrow),
+    overviewTitle: asString(detail.overviewTitle),
+    partnerTitle: asString(detail.partnerTitle),
+    partnerDescription: asString(detail.partnerDescription),
+    bestFitTitle: asString(detail.bestFitTitle),
+    bestFitDescription: asString(detail.bestFitDescription),
+    capabilitiesTitle: asString(detail.capabilitiesTitle),
+    processTitle: asString(detail.processTitle),
+    faqTitle: asString(detail.faqTitle),
+    deliveryLabel: asString(detail.deliveryLabel),
+    deliveryDescription: asString(detail.deliveryDescription),
+  };
+}
+
 module.exports = {
   asString,
   asStringArray,
@@ -253,4 +270,5 @@ module.exports = {
   normalizeValues,
   normalizeFooterLinks,
   normalizeSectionToggles,
+  normalizeServiceDetailContent,
 };

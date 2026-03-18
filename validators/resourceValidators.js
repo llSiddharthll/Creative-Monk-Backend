@@ -62,6 +62,7 @@ const serviceValidator = [
   optionalArray("process"),
   optionalArray("outcomes"),
   optionalArray("faqs"),
+  optionalObject("detailContent"),
   optionalObject("seo"),
   optionalNumber("order"),
   optionalBoolean("isFeatured"),

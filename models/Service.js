@@ -7,6 +7,7 @@ const {
   normalizeFaqItems,
   normalizeProcessSteps,
   normalizeSeo,
+  normalizeServiceDetailContent,
 } = require("./shared");
 
 module.exports = createSqliteModel({
@@ -44,6 +45,7 @@ module.exports = createSqliteModel({
       process: normalizeProcessSteps(payload.process),
       outcomes: asStringArray(payload.outcomes),
       faqs: normalizeFaqItems(payload.faqs),
+      detailContent: normalizeServiceDetailContent(payload.detailContent),
       seo: normalizeSeo(payload.seo),
       order: asInteger(payload.order, 0),
       isFeatured: asBoolean(payload.isFeatured, false),
