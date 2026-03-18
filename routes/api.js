@@ -18,6 +18,8 @@ const BlogPost = require("../models/BlogPost");
 const FAQ = require("../models/FAQ");
 const TeamMember = require("../models/TeamMember");
 const CareerOpening = require("../models/CareerOpening");
+const seedData = require("../seed/seedData");
+const { connectToDatabase } = require("../config/db");
 const {
   authLoginValidator,
   siteSettingsValidator,
@@ -156,5 +158,39 @@ router.get("/enquiries", auth, listEnquiries);
 router.patch("/enquiries/:id", auth, enquiryPatchValidator, validate, updateEnquiry);
 
 router.get("/stats", auth, getStats);
+
+router.post("/seed", auth, async (req, res, next) => {
+  try {
+    await connectToDatabase();
+
+    await Promise.all([
+      SiteSettings.clear(),
+      ServiceCategory.clear(),
+      Service.clear(),
+      CaseStudy.clear(),
+      Client.clear(),
+      Testimonial.clear(),
+      BlogPost.clear(),
+      FAQ.clear(),
+      TeamMember.clear(),
+      CareerOpening.clear(),
+    ]);
+
+    await SiteSettings.create(seedData.siteSettings);
+    await ServiceCategory.bulkCreate(seedData.serviceCategories);
+    await Service.bulkCreate(seedData.services);
+    await CaseStudy.bulkCreate(seedData.caseStudies);
+    await Client.bulkCreate(seedData.clients);
+    await Testimonial.bulkCreate(seedData.testimonials);
+    await BlogPost.bulkCreate(seedData.blogs);
+    await FAQ.bulkCreate(seedData.faqs);
+    await TeamMember.bulkCreate(seedData.team);
+    await CareerOpening.bulkCreate(seedData.careers);
+
+    res.json({ message: "Seed completed successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
