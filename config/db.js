@@ -1,30 +1,28 @@
-const fs = require("fs");
-const path = require("path");
-const Database = require("better-sqlite3");
+const { createClient } = require("@libsql/client");
+require("dotenv").config();
 
 let databaseInstance;
 
-function resolveDatabasePath() {
-  const configuredPath = process.env.SQLITE_PATH || "./data/creative-monk.sqlite";
-
-  if (path.isAbsolute(configuredPath)) {
-    return configuredPath;
-  }
-
-  return path.resolve(__dirname, "..", configuredPath);
-}
-
 function getDatabase() {
   if (!databaseInstance) {
-    const databasePath = resolveDatabasePath();
-    fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+    const url = process.env.TURSO_DATABASE_URL;
+    const authToken = process.env.TURSO_AUTH_TOKEN;
 
-    databaseInstance = new Database(databasePath);
-    databaseInstance.pragma("journal_mode = WAL");
-    databaseInstance.pragma("foreign_keys = ON");
+    if (!url) {
+      throw new Error("TURSO_DATABASE_URL is not defined in environment variables");
+    }
+
+    databaseInstance = createClient({
+      url: url,
+      authToken: authToken,
+    });
   }
 
   return databaseInstance;
+}
+
+function resolveDatabasePath() {
+  return process.env.TURSO_DATABASE_URL || "unknown";
 }
 
 async function connectToDatabase() {

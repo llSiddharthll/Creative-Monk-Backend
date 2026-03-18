@@ -4,7 +4,7 @@ const { createHttpError } = require("../utils/httpError");
 const initializedTables = new Set();
 
 function quoteIdentifier(identifier) {
-  return `"${String(identifier).replace(/"/g, "\"\"")}"`;
+  return `"${String(identifier).replace(/"/g, '""')}"`;
 }
 
 function toColumnValue(value, type) {
@@ -59,7 +59,7 @@ function buildOrderClause(sort, columns) {
   return `ORDER BY ${normalized.join(", ")}`;
 }
 
-function ensureTable(config) {
+async function ensureTable(config) {
   if (initializedTables.has(config.tableName)) {
     return;
   }
@@ -73,25 +73,25 @@ function ensureTable(config) {
     ...Object.entries(config.columns).map(([name, type]) => `${quoteIdentifier(name)} ${type}`),
   ];
 
-  db.exec(
-    `CREATE TABLE IF NOT EXISTS ${quoteIdentifier(config.tableName)} (${columnDefinitions.join(", ")})`,
+  await db.execute(
+    `CREATE TABLE IF NOT EXISTS ${quoteIdentifier(config.tableName)} (${columnDefinitions.join(", ")})`
   );
 
-  (config.uniqueFields || []).forEach((field) => {
-    db.exec(
+  for (const field of config.uniqueFields || []) {
+    await db.execute(
       `CREATE UNIQUE INDEX IF NOT EXISTS ${quoteIdentifier(
-        `idx_${config.tableName}_${field}_unique`,
-      )} ON ${quoteIdentifier(config.tableName)} (${quoteIdentifier(field)})`,
+        `idx_${config.tableName}_${field}_unique`
+      )} ON ${quoteIdentifier(config.tableName)} (${quoteIdentifier(field)})`
     );
-  });
+  }
 
-  (config.indexFields || []).forEach((field) => {
-    db.exec(
+  for (const field of config.indexFields || []) {
+    await db.execute(
       `CREATE INDEX IF NOT EXISTS ${quoteIdentifier(
-        `idx_${config.tableName}_${field}`,
-      )} ON ${quoteIdentifier(config.tableName)} (${quoteIdentifier(field)})`,
+        `idx_${config.tableName}_${field}`
+      )} ON ${quoteIdentifier(config.tableName)} (${quoteIdentifier(field)})`
     );
-  });
+  }
 
   initializedTables.add(config.tableName);
 }
@@ -129,14 +129,12 @@ function createSqliteModel(config) {
     ...config,
   };
 
-  ensureTable(modelConfig);
-
   const model = {
     tableName: modelConfig.tableName,
     fields: modelConfig.columns,
 
     async findAll({ filters = {}, sort = modelConfig.defaultSort, limit } = {}) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
       const where = buildWhereClause(filters, modelConfig.columns);
       const orderBy = buildOrderClause(sort, modelConfig.columns);
@@ -152,7 +150,8 @@ function createSqliteModel(config) {
         .filter(Boolean)
         .join(" ");
 
-      return db.prepare(sql).all(...where.params).map(parseRow);
+      const result = await db.execute({ sql, args: where.params });
+      return result.rows.map(parseRow);
     },
 
     async findOne(filters = {}, { sort = modelConfig.defaultSort } = {}) {
@@ -161,16 +160,17 @@ function createSqliteModel(config) {
     },
 
     async findById(id) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
-      const row = db
-        .prepare(`SELECT * FROM ${quoteIdentifier(modelConfig.tableName)} WHERE "pk" = ?`)
-        .get(Number(id));
-      return parseRow(row);
+      const result = await db.execute({
+        sql: `SELECT * FROM ${quoteIdentifier(modelConfig.tableName)} WHERE "pk" = ?`,
+        args: [Number(id)],
+      });
+      return parseRow(result.rows[0]);
     },
 
     async create(payload) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
       const now = new Date().toISOString();
       const document = modelConfig.normalize(payload, { isNew: true });
@@ -186,17 +186,16 @@ function createSqliteModel(config) {
       ];
 
       try {
-        const result = db
-          .prepare(
-            `INSERT INTO ${quoteIdentifier(modelConfig.tableName)} (${columns
-              .map(quoteIdentifier)
-              .join(", ")}) VALUES (${placeholders})`,
-          )
-          .run(...values);
+        const result = await db.execute({
+          sql: `INSERT INTO ${quoteIdentifier(modelConfig.tableName)} (${columns
+            .map(quoteIdentifier)
+            .join(", ")}) VALUES (${placeholders})`,
+          args: values,
+        });
 
         return model.findById(result.lastInsertRowid);
       } catch (error) {
-        if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+        if (error.message && error.message.includes("UNIQUE constraint failed")) {
           const field = (error.message.split(".").pop() || "field").replace(/["']/g, "");
           throw createHttpError(409, `${field} must be unique`);
         }
@@ -206,7 +205,7 @@ function createSqliteModel(config) {
     },
 
     async updateById(id, payload) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
       const existing = await model.findById(id);
 
@@ -218,7 +217,7 @@ function createSqliteModel(config) {
       const document = modelConfig.normalize({ ...existing, ...payload }, { existing });
       const row = mapDocumentToRow(document, modelConfig);
       const assignments = ['"data" = ?', '"updatedAt" = ?'].concat(
-        Object.keys(modelConfig.columns).map((field) => `${quoteIdentifier(field)} = ?`),
+        Object.keys(modelConfig.columns).map((field) => `${quoteIdentifier(field)} = ?`)
       );
       const values = [
         JSON.stringify(document),
@@ -228,11 +227,14 @@ function createSqliteModel(config) {
       ];
 
       try {
-        db.prepare(
-          `UPDATE ${quoteIdentifier(modelConfig.tableName)} SET ${assignments.join(", ")} WHERE "pk" = ?`,
-        ).run(...values);
+        await db.execute({
+          sql: `UPDATE ${quoteIdentifier(modelConfig.tableName)} SET ${assignments.join(
+            ", "
+          )} WHERE "pk" = ?`,
+          args: values,
+        });
       } catch (error) {
-        if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+        if (error.message && error.message.includes("UNIQUE constraint failed")) {
           const field = (error.message.split(".").pop() || "field").replace(/["']/g, "");
           throw createHttpError(409, `${field} must be unique`);
         }
@@ -244,7 +246,7 @@ function createSqliteModel(config) {
     },
 
     async deleteById(id) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
       const existing = await model.findById(id);
 
@@ -252,66 +254,64 @@ function createSqliteModel(config) {
         return null;
       }
 
-      db.prepare(`DELETE FROM ${quoteIdentifier(modelConfig.tableName)} WHERE "pk" = ?`).run(
-        Number(id),
-      );
+      await db.execute({
+        sql: `DELETE FROM ${quoteIdentifier(modelConfig.tableName)} WHERE "pk" = ?`,
+        args: [Number(id)],
+      });
 
       return existing;
     },
 
     async count(filters = {}) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
       const where = buildWhereClause(filters, modelConfig.columns);
-      const row = db
-        .prepare(
-          `SELECT COUNT(*) as total FROM ${quoteIdentifier(modelConfig.tableName)} ${where.sql}`,
-        )
-        .get(...where.params);
+      const result = await db.execute({
+        sql: `SELECT COUNT(*) as total FROM ${quoteIdentifier(modelConfig.tableName)} ${where.sql}`,
+        args: where.params,
+      });
 
+      const row = result.rows[0];
       return row?.total || 0;
     },
 
     async clear() {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
-      db.prepare(`DELETE FROM ${quoteIdentifier(modelConfig.tableName)}`).run();
+      await db.execute(`DELETE FROM ${quoteIdentifier(modelConfig.tableName)}`);
     },
 
     async bulkCreate(items) {
-      ensureTable(modelConfig);
+      await ensureTable(modelConfig);
       const db = getDatabase();
-      const insert = db.prepare(
-        `INSERT INTO ${quoteIdentifier(modelConfig.tableName)} (${["data", "createdAt", "updatedAt", ...Object.keys(modelConfig.columns)]
-          .map(quoteIdentifier)
-          .join(", ")}) VALUES (${["data", "createdAt", "updatedAt", ...Object.keys(modelConfig.columns)]
-          .map(() => "?")
-          .join(", ")})`,
-      );
-
-      const transaction = db.transaction((records) => {
-        records.forEach((item) => {
-          const now = new Date().toISOString();
-          const document = modelConfig.normalize(item, { isNew: true });
-          const row = mapDocumentToRow(document, modelConfig);
-
-          insert.run(
-            JSON.stringify(document),
-            now,
-            now,
-            ...Object.keys(modelConfig.columns).map((field) => row[field]),
-          );
-        });
+      
+      const statements = items.map(item => {
+        const now = new Date().toISOString();
+        const document = modelConfig.normalize(item, { isNew: true });
+        const row = mapDocumentToRow(document, modelConfig);
+        
+        const columns = ["data", "createdAt", "updatedAt", ...Object.keys(modelConfig.columns)];
+        const placeholders = columns.map(() => "?").join(", ");
+        const values = [
+          JSON.stringify(document),
+          now,
+          now,
+          ...Object.keys(modelConfig.columns).map((field) => row[field]),
+        ];
+        
+        return {
+          sql: `INSERT INTO ${quoteIdentifier(modelConfig.tableName)} (${columns.map(quoteIdentifier).join(", ")}) VALUES (${placeholders})`,
+          args: values
+        };
       });
 
       try {
-        transaction(items);
+        await db.batch(statements, "write");
       } catch (error) {
-        if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+        if (error.message && error.message.includes("UNIQUE constraint failed")) {
           const field = (error.message.split(".").pop() || "field").replace(/["']/g, "");
           throw createHttpError(409, `${field} must be unique`);
         }
-
         throw error;
       }
     },
