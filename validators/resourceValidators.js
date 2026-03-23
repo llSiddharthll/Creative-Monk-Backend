@@ -174,6 +174,74 @@ const enquiryPatchValidator = [
   optionalString("notes"),
 ];
 
+const financeRecordValidator = [
+  requiredString("label", "Label"),
+  requiredString("periodKey", "Period key"),
+  optionalString("currency"),
+  optionalNumber("revenue"),
+  optionalNumber("expenses"),
+  optionalNumber("adSpend"),
+  optionalNumber("payroll"),
+  optionalNumber("toolsCost"),
+  optionalNumber("outstandingInvoices"),
+  optionalNumber("cashInHand"),
+  optionalNumber("profit"),
+  optionalNumber("marginPct"),
+  body("status").optional().isIn(["forecast", "actual", "closed"]),
+  optionalString("notes"),
+  optionalBoolean("isActive"),
+];
+
+const employeeValidator = [
+  requiredString("name", "Name"),
+  requiredString("role", "Role"),
+  requiredString("department", "Department"),
+  optionalString("email"),
+  optionalString("phone"),
+  optionalString("avatar"),
+  body("status")
+    .optional()
+    .isIn(["active", "on-leave", "probation", "freelance", "inactive"]),
+  body("employmentType")
+    .optional()
+    .isIn(["full-time", "part-time", "contract", "intern"]),
+  optionalNumber("monthlySalary"),
+  optionalNumber("utilizationPct"),
+  body("ownerLevel").optional().isIn(["lead", "member", "executive"]),
+  body("joinedAt").optional().isISO8601(),
+  optionalArray("assignedClients"),
+  optionalArray("primarySkills"),
+  optionalArray("goals"),
+  optionalString("notes"),
+  optionalNumber("order"),
+  optionalBoolean("isActive"),
+];
+
+const agencyClientValidator = [
+  requiredString("name", "Name"),
+  optionalString("website"),
+  optionalString("primaryContact"),
+  optionalString("contactEmail"),
+  optionalString("contactPhone"),
+  optionalString("owner"),
+  body("status")
+    .optional()
+    .isIn(["onboarding", "active", "retainer", "paused", "offboarded"]),
+  optionalNumber("monthlyRetainer"),
+  body("projectHealth").optional().isIn(["green", "amber", "red"]),
+  optionalNumber("seoScore"),
+  optionalNumber("socialScore"),
+  optionalNumber("websiteScore"),
+  body("nextReviewDate").optional().isISO8601(),
+  optionalArray("services"),
+  optionalArray("websitesManaged"),
+  optionalArray("priorityGoals"),
+  optionalString("notes"),
+  optionalBoolean("hasCmsAccess"),
+  optionalNumber("order"),
+  optionalBoolean("isActive"),
+];
+
 module.exports = {
   authLoginValidator,
   siteSettingsValidator,
@@ -188,4 +256,7 @@ module.exports = {
   careerOpeningValidator,
   enquiryValidator,
   enquiryPatchValidator,
+  financeRecordValidator,
+  employeeValidator,
+  agencyClientValidator,
 };

@@ -1,30 +1,33 @@
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("../utils/asyncHandler");
+const {
+  comparePassword,
+  findAdminUserByEmail,
+  isAdminConfigured,
+} = require("../utils/adminUsers");
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_PASSWORD;
   const secret = process.env.JWT_SECRET;
 
-  if (!adminEmail || !adminPassword || !secret) {
+  if (!isAdminConfigured() || !secret) {
     return res.status(500).json({
       error: "Admin authentication is not configured correctly.",
     });
   }
 
-  const emailMatches = email === adminEmail;
-  const passwordMatches =
-    password === adminPassword || bcrypt.compareSync(password, adminPassword);
+  const adminUser = findAdminUserByEmail(email);
+  const passwordMatches = adminUser
+    ? comparePassword(password, adminUser.password)
+    : false;
 
-  if (!emailMatches || !passwordMatches) {
+  if (!adminUser || !passwordMatches) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
   const token = jwt.sign(
-    { email: adminEmail, role: "admin" },
+    { email: adminUser.email, role: adminUser.role, name: adminUser.name },
     secret,
     { expiresIn: "7d" },
   );
@@ -32,9 +35,9 @@ const login = asyncHandler(async (req, res) => {
   return res.json({
     token,
     user: {
-      email: adminEmail,
-      role: "admin",
-      name: "Creative Monk Admin",
+      email: adminUser.email,
+      role: adminUser.role,
+      name: adminUser.name,
     },
   });
 });
