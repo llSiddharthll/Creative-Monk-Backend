@@ -9,6 +9,12 @@ const { getSiteSettings, updateSiteSettings } = require("../controllers/siteSett
 const { createEnquiry, listEnquiries, updateEnquiry } = require("../controllers/enquiryController");
 const { getStats } = require("../controllers/statsController");
 const { getSuperAdminOverview } = require("../controllers/superAdminController");
+const { listActivities, createActivity } = require("../controllers/activityController");
+const { listFollowUps, createFollowUp, updateFollowUp } = require("../controllers/followUpController");
+const { getPipeline, changeStage, assignLead, convertToClient } = require("../controllers/leadPipelineController");
+const { getFinanceSummary, getExpenseBreakdown, getClientBreakdown, getPnl } = require("../controllers/financeAnalyticsController");
+const { getEmployeeSummary, getUtilization, getDepartmentStats } = require("../controllers/employeeAnalyticsController");
+const { getClientDetail, listClientReviews, createClientReview } = require("../controllers/clientProfileController");
 const { uploadMedia } = require("../controllers/uploadController");
 const upload = require("../middleware/upload");
 const AgencyClient = require("../models/AgencyClient");
@@ -25,6 +31,9 @@ const BlogPost = require("../models/BlogPost");
 const FAQ = require("../models/FAQ");
 const TeamMember = require("../models/TeamMember");
 const CareerOpening = require("../models/CareerOpening");
+const Activity = require("../models/Activity");
+const FollowUp = require("../models/FollowUp");
+const ClientReview = require("../models/ClientReview");
 const seedData = require("../seed/seedData");
 const { connectToDatabase } = require("../config/db");
 const {
@@ -44,6 +53,11 @@ const {
   enquiryPatchValidator,
   employeeValidator,
   financeRecordValidator,
+  activityValidator,
+  followUpValidator,
+  stageChangeValidator,
+  assignLeadValidator,
+  clientReviewValidator,
 } = require("../validators/resourceValidators");
 
 const router = express.Router();
@@ -204,6 +218,37 @@ router.put("/agency-clients/:id", ...superAccess, agencyClientValidator, validat
 router.delete("/agency-clients/:id", ...superAccess, agencyClientController.remove);
 
 router.get("/super-admin/overview", ...superAccess, getSuperAdminOverview);
+
+// ── Lead Pipeline ──
+router.get("/super-admin/leads/pipeline", ...superAccess, getPipeline);
+router.patch("/enquiries/:id/stage", ...superAccess, stageChangeValidator, validate, changeStage);
+router.patch("/enquiries/:id/assign", ...superAccess, assignLeadValidator, validate, assignLead);
+router.post("/super-admin/leads/:id/convert", ...superAccess, convertToClient);
+
+// ── Activities ──
+router.get("/activities", ...superAccess, listActivities);
+router.post("/activities", ...superAccess, activityValidator, validate, createActivity);
+
+// ── Follow-ups ──
+router.get("/follow-ups", ...superAccess, listFollowUps);
+router.post("/follow-ups", ...superAccess, followUpValidator, validate, createFollowUp);
+router.patch("/follow-ups/:id", ...superAccess, followUpValidator, validate, updateFollowUp);
+
+// ── Client Profile ──
+router.get("/agency-clients/:id/detail", ...superAccess, getClientDetail);
+router.get("/agency-clients/:id/reviews", ...superAccess, listClientReviews);
+router.post("/agency-clients/:id/reviews", ...superAccess, clientReviewValidator, validate, createClientReview);
+
+// ── Finance Analytics ──
+router.get("/super-admin/finance/summary", ...superAccess, getFinanceSummary);
+router.get("/super-admin/finance/expense-breakdown", ...superAccess, getExpenseBreakdown);
+router.get("/super-admin/finance/client-breakdown", ...superAccess, getClientBreakdown);
+router.get("/super-admin/finance/pnl", ...superAccess, getPnl);
+
+// ── Employee Analytics ──
+router.get("/super-admin/employees/summary", ...superAccess, getEmployeeSummary);
+router.get("/super-admin/employees/utilization", ...superAccess, getUtilization);
+router.get("/super-admin/employees/department-stats", ...superAccess, getDepartmentStats);
 
 router.post("/seed", ...superAccess, async (req, res, next) => {
   try {

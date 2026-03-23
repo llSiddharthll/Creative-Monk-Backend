@@ -171,7 +171,12 @@ const enquiryValidator = [
 
 const enquiryPatchValidator = [
   body("status").optional().isIn(["new", "in-progress", "responded", "archived"]),
+  body("stage").optional().isIn(["new", "qualified", "proposal_sent", "negotiation", "won", "lost"]),
   optionalString("notes"),
+  optionalString("assignedTo"),
+  body("priority").optional().isIn(["hot", "warm", "cold"]),
+  optionalNumber("estimatedValue"),
+  optionalString("convertedClientId"),
 ];
 
 const financeRecordValidator = [
@@ -242,6 +247,39 @@ const agencyClientValidator = [
   optionalBoolean("isActive"),
 ];
 
+const activityValidator = [
+  optionalString("leadId"),
+  optionalString("clientId"),
+  body("type").optional().isIn(["note", "call", "email", "meeting", "stage_change", "system"]),
+  optionalString("content"),
+];
+
+const followUpValidator = [
+  optionalString("leadId"),
+  optionalString("clientId"),
+  optionalString("title"),
+  optionalString("notes"),
+  optionalString("dueDate"),
+  body("status").optional().isIn(["pending", "done"]),
+];
+
+const stageChangeValidator = [
+  body("stage").notEmpty().isIn(["new", "qualified", "proposal_sent", "negotiation", "won", "lost"]).withMessage("Valid stage is required"),
+];
+
+const assignLeadValidator = [
+  requiredString("assignedTo", "Assigned employee"),
+];
+
+const clientReviewValidator = [
+  optionalString("reviewDate"),
+  optionalNumber("seoScore"),
+  optionalNumber("socialScore"),
+  optionalNumber("websiteScore"),
+  body("overallHealth").optional().isIn(["green", "amber", "red"]),
+  optionalString("notes"),
+];
+
 module.exports = {
   authLoginValidator,
   siteSettingsValidator,
@@ -259,4 +297,9 @@ module.exports = {
   financeRecordValidator,
   employeeValidator,
   agencyClientValidator,
+  activityValidator,
+  followUpValidator,
+  stageChangeValidator,
+  assignLeadValidator,
+  clientReviewValidator,
 };

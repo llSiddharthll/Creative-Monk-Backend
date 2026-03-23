@@ -1,5 +1,5 @@
 const createSqliteModel = require("./createSqliteModel");
-const { asString, pickEnum } = require("./shared");
+const { asString, asNumber, pickEnum } = require("./shared");
 
 module.exports = createSqliteModel({
   tableName: "enquiries",
@@ -12,8 +12,13 @@ module.exports = createSqliteModel({
     sourcePage: "TEXT",
     status: "TEXT",
     notes: "TEXT",
+    stage: "TEXT",
+    assignedTo: "TEXT",
+    priority: "TEXT",
+    estimatedValue: "REAL",
+    convertedClientId: "TEXT",
   },
-  indexFields: ["email", "service", "sourcePage", "status", "createdAt"],
+  indexFields: ["email", "service", "sourcePage", "status", "stage", "assignedTo", "createdAt"],
   defaultSort: {
     createdAt: -1,
   },
@@ -27,6 +32,11 @@ module.exports = createSqliteModel({
       sourcePage: asString(payload.sourcePage, "contact"),
       status: pickEnum(payload.status, ["new", "in-progress", "responded", "archived"], "new"),
       notes: asString(payload.notes),
+      stage: pickEnum(payload.stage, ["new", "qualified", "proposal_sent", "negotiation", "won", "lost"], "new"),
+      assignedTo: asString(payload.assignedTo),
+      priority: pickEnum(payload.priority, ["hot", "warm", "cold"], "cold"),
+      estimatedValue: asNumber(payload.estimatedValue, 0),
+      convertedClientId: asString(payload.convertedClientId),
     };
   },
 });
