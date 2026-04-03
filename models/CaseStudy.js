@@ -21,13 +21,19 @@ module.exports = createSqliteModel({
     link: "TEXT",
     duration: "TEXT",
     image: "TEXT",
+    portfolioImage: "TEXT",
     order: "INTEGER",
     isFeatured: "INTEGER",
     isActive: "INTEGER",
   },
   uniqueFields: ["id"],
   indexFields: ["id", "category", "order", "isFeatured", "isActive"],
-  normalize(payload = {}) {
+  normalize(payload = {}, { existing = null, changes = {} } = {}) {
+    const nextPortfolioImage =
+      changes.portfolioImage !== undefined
+        ? asString(changes.portfolioImage)
+        : asString(existing?.portfolioImage || existing?.image || payload.portfolioImage || payload.image);
+
     return {
       id: asString(payload.id),
       title: asString(payload.title),
@@ -45,6 +51,7 @@ module.exports = createSqliteModel({
       link: asString(payload.link),
       duration: asString(payload.duration),
       image: asString(payload.image),
+      portfolioImage: nextPortfolioImage,
       seo: normalizeSeo(payload.seo),
       order: asInteger(payload.order, 0),
       isFeatured: asBoolean(payload.isFeatured, false),

@@ -86,6 +86,7 @@ const caseStudyValidator = [
   optionalString("link"),
   optionalString("duration"),
   optionalString("image"),
+  optionalString("portfolioImage"),
   optionalObject("seo"),
   optionalNumber("order"),
   optionalBoolean("isFeatured"),

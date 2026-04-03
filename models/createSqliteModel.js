@@ -77,6 +77,19 @@ async function ensureTable(config) {
     `CREATE TABLE IF NOT EXISTS ${quoteIdentifier(config.tableName)} (${columnDefinitions.join(", ")})`
   );
 
+  const tableInfo = await db.execute({
+    sql: `PRAGMA table_info(${quoteIdentifier(config.tableName)})`,
+  });
+  const existingColumns = new Set(tableInfo.rows.map((row) => String(row.name)));
+
+  for (const [name, type] of Object.entries(config.columns)) {
+    if (!existingColumns.has(name)) {
+      await db.execute(
+        `ALTER TABLE ${quoteIdentifier(config.tableName)} ADD COLUMN ${quoteIdentifier(name)} ${type}`
+      );
+    }
+  }
+
   for (const field of config.uniqueFields || []) {
     await db.execute(
       `CREATE UNIQUE INDEX IF NOT EXISTS ${quoteIdentifier(
@@ -173,7 +186,7 @@ function createSqliteModel(config) {
       await ensureTable(modelConfig);
       const db = getDatabase();
       const now = new Date().toISOString();
-      const document = modelConfig.normalize(payload, { isNew: true });
+      const document = modelConfig.normalize(payload, { isNew: true, changes: payload });
       const row = mapDocumentToRow(document, modelConfig);
 
       const columns = ["data", "createdAt", "updatedAt", ...Object.keys(modelConfig.columns)];
@@ -214,7 +227,7 @@ function createSqliteModel(config) {
       }
 
       const now = new Date().toISOString();
-      const document = modelConfig.normalize({ ...existing, ...payload }, { existing });
+      const document = modelConfig.normalize({ ...existing, ...payload }, { existing, changes: payload });
       const row = mapDocumentToRow(document, modelConfig);
       const assignments = ['"data" = ?', '"updatedAt" = ?'].concat(
         Object.keys(modelConfig.columns).map((field) => `${quoteIdentifier(field)} = ?`)

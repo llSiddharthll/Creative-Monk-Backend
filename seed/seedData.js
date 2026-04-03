@@ -263,6 +263,7 @@ const caseStudies = legacyDb.portfolio.map((item, index) => ({
   link: item.url || "",
   duration: index % 2 === 0 ? "4 weeks" : "6 weeks",
   image: item.image,
+  portfolioImage: item.image,
   seo: makeSeo({
     title: `${item.title} Case Study | Creative Monk`,
     description: item.description,
