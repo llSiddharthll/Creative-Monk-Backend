@@ -281,6 +281,20 @@ const clientReviewValidator = [
   optionalString("notes"),
 ];
 
+const portfolioItemValidator = [
+  requiredString("title", "Title"),
+  optionalString("description"),
+  requiredString("category", "Category"),
+  optionalString("client"),
+  optionalString("duration"),
+  optionalString("link"),
+  optionalArray("points"),
+  optionalString("image"),
+  optionalArray("gallery"),
+  optionalNumber("order"),
+  optionalBoolean("isActive"),
+];
+
 module.exports = {
   authLoginValidator,
   siteSettingsValidator,
@@ -303,4 +317,5 @@ module.exports = {
   stageChangeValidator,
   assignLeadValidator,
   clientReviewValidator,
+  portfolioItemValidator,
 };

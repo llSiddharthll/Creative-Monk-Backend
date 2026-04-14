@@ -1182,6 +1182,85 @@ const enquiries = [
   },
 ];
 
+caseStudies.push(
+  {
+    id: "dummy-graphic-design",
+    title: "Velocity Motion & Design Identity",
+    client: "Velocity",
+    category: "Graphic Design",
+    description: "A complete overhaul of the brand identity, print collateral, and vibrant poster series for a creative agency.",
+    content: "We partnered with Velocity to refresh its visual identity, introducing a energetic masonry grid style poster system...",
+    services: ["Branding", "Print Design"],
+    challenges: ["Outdated visual identity."],
+    solutions: ["Dynamic logo creation, 4k poster designs."],
+    results: ["Increased brand perception."],
+    metrics: [{ label: "Project Type", value: "Graphic Design" }],
+    gallery: [
+      "/dummy/graphic_design_gallery_1_1776107190101.png",
+      "/dummy/graphic_design_gallery_2_1776107209847.png",
+      "/dummy/graphic_design_gallery_3_1776107224535.png"
+    ],
+    testimonial: {
+      text: "Creative Monk exceeded our expectations...",
+      author: "Alex Rivera",
+      role: "CEO, Velocity"
+    },
+    link: "",
+    duration: "4 weeks",
+    image: "/dummy/graphic_design_gallery_1_1776107190101.png",
+    portfolioImage: "/dummy/graphic_design_gallery_1_1776107190101.png",
+    seo: makeSeo({
+      title: "Velocity Graphic Design Case Study",
+      description: "Graphic design case study.",
+      canonical: "https://thecreativemonk.in/case-studies/dummy-graphic-design",
+      keywords: ["Graphic design"],
+      ogImage: "/dummy/graphic_design_gallery_1_1776107190101.png",
+    }),
+    order: 100,
+    isFeatured: true,
+    isActive: true,
+  },
+  {
+    id: "dummy-seo-marketing",
+    title: "TechFlow SEO Growth Dashboard",
+    client: "TechFlow",
+    category: "SEO",
+    description: "Accelerated traffic and keyword rankings using data-driven Marketing dashboards.",
+    content: "We deployed advanced SEO strategies and tracked them using high-tech beautiful marketing dashboards.",
+    services: ["SEO", "Analytics"],
+    challenges: ["Low organic traffic."],
+    solutions: ["Comprehensive SEO strategy."],
+    results: ["+45.8% Revenue Growth."],
+    metrics: [
+      { label: "Revenue Growth", value: "+45.8%" },
+      { label: "Lead Generation", value: "+31%" },
+      { label: "Traffic", value: "245K Visits" }
+    ],
+    gallery: [
+      "/dummy/seo_marketing_dashboard_1776107241449.png"
+    ],
+    testimonial: {
+      text: "The data speaks for itself.",
+      author: "Sarah Jenkins",
+      role: "CMO, TechFlow"
+    },
+    link: "",
+    duration: "6 months",
+    image: "/dummy/seo_marketing_dashboard_1776107241449.png",
+    portfolioImage: "/dummy/seo_marketing_dashboard_1776107241449.png",
+    seo: makeSeo({
+      title: "TechFlow SEO Case Study",
+      description: "SEO marketing dashboard showcase.",
+      canonical: "https://thecreativemonk.in/case-studies/dummy-seo-marketing",
+      keywords: ["SEO"],
+      ogImage: "/dummy/seo_marketing_dashboard_1776107241449.png",
+    }),
+    order: 101,
+    isFeatured: true,
+    isActive: true,
+  }
+);
+
 module.exports = {
   siteSettings,
   serviceCategories,

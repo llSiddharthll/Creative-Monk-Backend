@@ -34,6 +34,7 @@ const CareerOpening = require("../models/CareerOpening");
 const Activity = require("../models/Activity");
 const FollowUp = require("../models/FollowUp");
 const ClientReview = require("../models/ClientReview");
+const PortfolioItem = require("../models/PortfolioItem");
 const seedData = require("../seed/seedData");
 const { connectToDatabase } = require("../config/db");
 const {
@@ -58,6 +59,7 @@ const {
   stageChangeValidator,
   assignLeadValidator,
   clientReviewValidator,
+  portfolioItemValidator,
 } = require("../validators/resourceValidators");
 
 const router = express.Router();
@@ -78,6 +80,11 @@ const caseStudyController = createResourceController({
   Model: CaseStudy,
   publicFilter: { isActive: true },
   lookupField: "id",
+});
+
+const portfolioController = createResourceController({
+  Model: PortfolioItem,
+  publicFilter: { isActive: true },
 });
 
 const clientController = createResourceController({
@@ -158,6 +165,13 @@ router.get("/admin/case-studies", ...cmsAccess, caseStudyController.adminList);
 router.post("/case-studies", ...cmsAccess, caseStudyValidator, validate, caseStudyController.create);
 router.put("/case-studies/:id", ...cmsAccess, caseStudyValidator, validate, caseStudyController.update);
 router.delete("/case-studies/:id", ...cmsAccess, caseStudyController.remove);
+
+router.get("/portfolio", portfolioController.list);
+router.get("/portfolio/:id", portfolioController.getOne);
+router.get("/admin/portfolio", ...cmsAccess, portfolioController.adminList);
+router.post("/portfolio", ...cmsAccess, portfolioItemValidator, validate, portfolioController.create);
+router.put("/portfolio/:id", ...cmsAccess, portfolioItemValidator, validate, portfolioController.update);
+router.delete("/portfolio/:id", ...cmsAccess, portfolioController.remove);
 
 router.get("/clients", clientController.list);
 router.get("/admin/clients", ...cmsAccess, clientController.adminList);
@@ -269,6 +283,7 @@ router.post("/seed", ...superAccess, async (req, res, next) => {
       FAQ.clear(),
       TeamMember.clear(),
       CareerOpening.clear(),
+      PortfolioItem.clear(),
     ]);
 
     await SiteSettings.create(seedData.siteSettings);
@@ -293,3 +308,4 @@ router.post("/seed", ...superAccess, async (req, res, next) => {
 });
 
 module.exports = router;
+// force restart
