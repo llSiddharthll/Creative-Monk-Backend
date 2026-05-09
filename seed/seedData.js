@@ -1258,7 +1258,249 @@ caseStudies.push(
     order: 101,
     isFeatured: true,
     isActive: true,
-  }
+  },
+  {
+    id: "tvisva-jewels",
+    title: "Tvisva Jewels: A Royal Digital Launch",
+    client: "Tvisva Jewels",
+    category: "Web Design & Branding",
+    description:
+      "Successfully launched a luxury jewelry brand with a cohesive digital identity, premium ecommerce store, and high-engagement social media presence.",
+    content:
+      "Tvisva Jewels came to us with a vision to revolutionize the luxury jewelry market with a digital-first approach. We crafted a royal brand identity that reflects the heritage of their jewelry while maintaining a modern, high-end aesthetic. The project involved designing a custom ecommerce platform focused on visual storytelling and building a social media launch strategy that generated immediate brand authority.",
+    services: ["Branding", "Website Design", "Social Media Marketing"],
+    challenges: [
+      "Establishing trust in the high-ticket luxury segment.",
+      "Creating a visual identity that balances heritage and modern luxury.",
+      "Ensuring a seamless, fast ecommerce experience for high-resolution jewelry imagery.",
+    ],
+    solutions: [
+      "Developed a custom high-end ecommerce website.",
+      "Crafted a cohesive brand launch strategy.",
+      "Created a social media aesthetic matching their royal jewelry collection.",
+    ],
+    results: [
+      "Successful brand launch with 50k+ reach in the first month.",
+      "Zero-friction luxury shopping experience.",
+      "High brand recall and premium market positioning.",
+    ],
+    metrics: [
+      { label: "Launch Reach", value: "50K+" },
+      { label: "Engagement Rate", value: "12%" },
+      { label: "Load Speed", value: "1.2s" },
+    ],
+    gallery: [
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop",
+    ],
+    testimonial: {
+      text: "Creative Monk transformed our vision into a royal digital reality. The brand launch was seamless and the results exceeded our expectations.",
+      author: "Founder",
+      role: "Tvisva Jewels",
+    },
+    link: "https://tvisvajewels.com/",
+    duration: "8 weeks",
+    image:
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop",
+    portfolioImage:
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop",
+    seo: makeSeo({
+      title: "Tvisva Jewels Case Study | Creative Monk",
+      description: "How we launched a luxury jewelry brand with premium design.",
+      canonical: "https://thecreativemonk.in/case-studies/tvisva-jewels",
+      keywords: ["Luxury Branding", "Jewelry Ecommerce", "Brand Launch"],
+      ogImage:
+        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop",
+    }),
+    order: 1,
+    isFeatured: true,
+    isActive: true,
+  },
+  {
+    id: "red-cloud-security",
+    title: "Red Cloud Security: Modernizing Security Solutions",
+    client: "Red Cloud Security",
+    category: "Web Development",
+    description:
+      "Revitalized the digital presence for a leading security firm, focusing on authority, lead generation, and professional service discovery.",
+    content:
+      "Red Cloud Security required a digital platform that matched the high-tech and reliable nature of their modern security systems. We focused on a high-performance web architecture that builds immediate trust with both B2B and B2C clients. The result is a professional hub that clearly communicates their expertise and makes service discovery effortless for potential leads.",
+    services: ["Website Development", "UI/UX Design", "SEO"],
+    challenges: [
+      "Old website lacked professional authority.",
+      "Low lead conversion from mobile users.",
+      "Complex service offerings were hard to navigate.",
+    ],
+    solutions: [
+      "High-performance, professional website build.",
+      "Simplified service navigation and information architecture.",
+      "Conversion-optimized lead capture systems.",
+    ],
+    results: [
+      "40% increase in monthly qualified leads.",
+      "Better brand authority in the security sector.",
+      "Improved search visibility for core security services.",
+    ],
+    metrics: [
+      { label: "Lead Growth", value: "+40%" },
+      { label: "Mobile Traffic", value: "+65%" },
+      { label: "Avg. Session", value: "3:45" },
+    ],
+    gallery: [
+      "https://images.unsplash.com/photo-1557597774-9d2739f8fa00?q=80&w=2050&auto=format&fit=crop",
+    ],
+    testimonial: {
+      text: "Our new website finally reflects the quality of our security solutions. We've seen a noticeable uptick in inquiries since the launch.",
+      author: "Director",
+      role: "Red Cloud Security",
+    },
+    link: "https://redcloudsecurity.org",
+    duration: "6 weeks",
+    image:
+      "https://images.unsplash.com/photo-1557597774-9d2739f8fa00?q=80&w=2050&auto=format&fit=crop",
+    portfolioImage:
+      "https://images.unsplash.com/photo-1557597774-9d2739f8fa00?q=80&w=2050&auto=format&fit=crop",
+    seo: makeSeo({
+      title: "Red Cloud Security Case Study | Creative Monk",
+      description: "Modernizing a security firm's digital presence for high performance.",
+      canonical: "https://thecreativemonk.in/case-studies/red-cloud-security",
+      keywords: ["Security Website", "B2B Lead Gen", "Web Modernization"],
+      ogImage:
+        "https://images.unsplash.com/photo-1557597774-9d2739f8fa00?q=80&w=2050&auto=format&fit=crop",
+    }),
+    order: 2,
+    isFeatured: true,
+    isActive: true,
+  },
+);
+
+services.push(
+  {
+    id: "branding",
+    title: "Branding",
+    slug: "branding",
+    tagline: "Building Digital Legacies through Strategic Identity.",
+    shortDescription:
+      "Holistic brand strategy that defines your market position, voice, and digital impact.",
+    longDescription:
+      "At Creative Monk, we believe branding is more than just a logo—it's the soul of your business. Our branding services encompass deep market research, strategic positioning, and a cohesive brand voice that resonates with your target audience. We build digital legacies by ensuring every touchpoint of your brand communicates authority, trust, and premium quality. From brand discovery to a full-scale digital presence launch, we provide the strategic framework needed to dominate your industry.",
+    features: [
+      "Brand Discovery & Strategy",
+      "Market Positioning Analysis",
+      "Messaging & Voice Framework",
+      "Digital Presence Launch Strategy",
+      "Comprehensive Brand Style Guides",
+      "Brand Archetype Definition",
+    ],
+    process: [
+      {
+        step: "Discovery",
+        desc: "Deep dive into your business values, goals, and audience.",
+      },
+      {
+        step: "Strategy",
+        desc: "Defining your unique market positioning and brand voice.",
+      },
+      {
+        step: "Visual Identity",
+        desc: "Crafting the visual language that supports the strategy.",
+      },
+      {
+        step: "Guidelines",
+        desc: "Creating detailed brand books for consistent implementation.",
+      },
+      { step: "Launch", desc: "Introducing your refreshed brand to the market." },
+    ],
+    outcomes: [
+      "Clear market positioning",
+      "Unified brand voice",
+      "Stronger customer loyalty",
+      "Premium brand perception",
+    ],
+    faqs: [
+      {
+        question: "Why is branding important for my business?",
+        answer:
+          "Branding helps you stand out in a crowded market, builds trust with your audience, and allows you to command premium pricing by increasing your perceived value.",
+      },
+      {
+        question: "How long does a full branding project take?",
+        answer:
+          "A comprehensive branding project typically takes 4-8 weeks, depending on the scope of the strategy and visual assets required.",
+      },
+    ],
+    icon: "Sparkles",
+    image:
+      "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop",
+    category: "digital-marketing",
+    order: 12,
+    isActive: true,
+    seo: makeSeo({
+      title: "Branding Services | Creative Monk",
+      description: "Build a powerful brand identity and digital presence with our strategic branding services.",
+      canonical: "https://thecreativemonk.in/services/branding",
+      keywords: ["Branding", "Brand Strategy", "Digital Identity"],
+      ogImage: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop",
+    }),
+  },
+  {
+    id: "print-design",
+    title: "Print Design",
+    slug: "print-design",
+    tagline: "Tangible Design for the Real World.",
+    shortDescription:
+      "High-quality print media from business cards to brochures that speak volumes about your professionalism.",
+    longDescription:
+      "In a digital world, high-quality print design makes your brand tangible and trustworthy. Creative Monk provides professional print design services in Chandigarh, India, ranging from luxury business cards and corporate brochures to high-impact billboards and magazine ads. Our designs are optimized for production, ensuring that colors are vibrant and typography is crisp. We bridge the gap between digital strategy and physical presence, giving your brand a professional edge in the real world.",
+    features: [
+      "Brochures & Flyers",
+      "Luxury Business Cards",
+      "Stationery & Letterheads",
+      "Billboard & Outdoor Signage",
+      "Magazine & Newspaper Ads",
+      "Company Profiles & Annual Reports",
+    ],
+    process: [
+      {
+        step: "Brief",
+        desc: "Gathering requirements, dimensions, and brand constraints.",
+      },
+      { step: "Design", desc: "Creating high-impact print-ready layouts." },
+      { step: "Review", desc: "Refining designs based on your feedback." },
+      { step: "Pre-press", desc: "Preparing files with bleed and crop marks." },
+      { step: "Delivery", desc: "Sending high-resolution files to your printer." },
+    ],
+    outcomes: [
+      "Professional physical presence",
+      "High-quality print assets",
+      "Brand consistency across media",
+      "Tangible marketing impact",
+    ],
+    faqs: [
+      {
+        question: "Do you handle the actual printing?",
+        answer:
+          "We provide the print-ready files optimized for production. We can also coordinate with your printer or recommend our trusted partners.",
+      },
+      {
+        question: "What file formats will I receive?",
+        answer:
+          "You will receive high-resolution PDFs with bleed marks, along with editable source files in AI or Indesign formats.",
+      },
+    ],
+    icon: "Printer",
+    image:
+      "https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?q=80&w=1932&auto=format&fit=crop",
+    category: "graphic-designing",
+    order: 14,
+    isActive: true,
+    seo: makeSeo({
+      title: "Print Design Services | Creative Monk",
+      description: "Professional print design services in Chandigarh for brochures, business cards, and more.",
+      canonical: "https://thecreativemonk.in/services/print-design",
+      keywords: ["Print Design", "Graphic Design Chandigarh", "Brochure Design"],
+      ogImage: "https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?q=80&w=1932&auto=format&fit=crop",
+    }),
+  },
 );
 
 module.exports = {
