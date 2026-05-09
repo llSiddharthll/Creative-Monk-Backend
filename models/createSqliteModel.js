@@ -146,13 +146,19 @@ function createSqliteModel(config) {
     tableName: modelConfig.tableName,
     fields: modelConfig.columns,
 
-    async findAll({ filters = {}, sort = modelConfig.defaultSort, limit } = {}) {
+    async findAll({ filters = {}, sort = modelConfig.defaultSort, limit, offset } = {}) {
       await ensureTable(modelConfig);
       const db = getDatabase();
       const where = buildWhereClause(filters, modelConfig.columns);
       const orderBy = buildOrderClause(sort, modelConfig.columns);
-      const limitClause =
-        Number.isFinite(Number(limit)) && Number(limit) > 0 ? `LIMIT ${Number(limit)}` : "";
+      
+      let limitClause = "";
+      if (Number.isFinite(Number(limit)) && Number(limit) > 0) {
+        limitClause = `LIMIT ${Number(limit)}`;
+        if (Number.isFinite(Number(offset)) && Number(offset) >= 0) {
+          limitClause += ` OFFSET ${Number(offset)}`;
+        }
+      }
 
       const sql = [
         `SELECT * FROM ${quoteIdentifier(modelConfig.tableName)}`,

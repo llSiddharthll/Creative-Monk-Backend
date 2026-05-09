@@ -45,14 +45,37 @@ function createResourceController({
 
   const list = asyncHandler(async (req, res) => {
     const filters = applyQuery(req, { ...publicFilter }, true);
-    const limit = req.query.limit ? Number(req.query.limit) : undefined;
-    const documents = await Model.findAll({
-      filters,
-      sort: buildSort(defaultSort),
-      limit,
-    });
+    
+    // Pagination logic
+    const page = req.query.page ? Math.max(1, Number(req.query.page)) : undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : (page ? 10 : undefined);
+    const offset = page ? (page - 1) * limit : undefined;
 
-    res.json(listTransform ? listTransform(documents) : documents);
+    const [documents, total] = await Promise.all([
+      Model.findAll({
+        filters,
+        sort: buildSort(defaultSort),
+        limit,
+        offset,
+      }),
+      Model.count(filters),
+    ]);
+
+    const transformed = listTransform ? listTransform(documents) : documents;
+
+    if (page) {
+      res.json({
+        data: transformed,
+        pagination: {
+          total,
+          page,
+          limit,
+          pages: Math.ceil(total / limit),
+        },
+      });
+    } else {
+      res.json(transformed);
+    }
   });
 
   const adminList = asyncHandler(async (req, res) => {
