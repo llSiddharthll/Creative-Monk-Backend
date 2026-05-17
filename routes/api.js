@@ -6,6 +6,11 @@ const validate = require("../middleware/validate");
 const createResourceController = require("../controllers/resourceController");
 const { login, me } = require("../controllers/authController");
 const { getSiteSettings, updateSiteSettings } = require("../controllers/siteSettingsController");
+const {
+  getSection: getHomepageSection,
+  listSections: listHomepageSections,
+  upsertSection: upsertHomepageSection,
+} = require("../controllers/homepageContentController");
 const { createEnquiry, listEnquiries, updateEnquiry } = require("../controllers/enquiryController");
 const { getStats } = require("../controllers/statsController");
 const { getSuperAdminOverview } = require("../controllers/superAdminController");
@@ -145,6 +150,11 @@ router.post("/uploads/media", ...cmsAccess, upload.single("file"), uploadMedia);
 
 router.get("/site-settings", getSiteSettings);
 router.put("/site-settings", ...cmsAccess, siteSettingsValidator, validate, updateSiteSettings);
+
+// ── Homepage editable content ──
+router.get("/homepage", listHomepageSections);
+router.get("/homepage/:section", getHomepageSection);
+router.put("/admin/homepage/:section", ...cmsAccess, upsertHomepageSection);
 
 router.get("/service-categories", serviceCategoryController.list);
 router.get("/admin/service-categories", ...cmsAccess, serviceCategoryController.adminList);
