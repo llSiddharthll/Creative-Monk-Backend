@@ -4,34 +4,26 @@ function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
 
+/* One admin — the SEO workspace is the only workspace. Credentials come
+   from SUPER_ADMIN_* env vars; ADMIN_* and SEO_ADMIN_* are no longer
+   read. The role string stays "super_admin" because every backend route
+   gate (cmsAccess, superAccess) accepts it. */
 function buildAdminUsers() {
-  const superAdminEmail = normalizeEmail(
-    process.env.SUPER_ADMIN_EMAIL || process.env.ADMIN_EMAIL,
-  );
-  const superAdminPassword =
-    process.env.SUPER_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
+  const email = normalizeEmail(process.env.SUPER_ADMIN_EMAIL);
+  const password = process.env.SUPER_ADMIN_PASSWORD;
 
-  const seoAdminEmail = normalizeEmail(process.env.SEO_ADMIN_EMAIL);
-  const seoAdminPassword = process.env.SEO_ADMIN_PASSWORD;
+  if (!email || !password) {
+    return [];
+  }
 
   return [
-    superAdminEmail && superAdminPassword
-      ? {
-          email: superAdminEmail,
-          password: superAdminPassword,
-          role: "super_admin",
-          name: process.env.SUPER_ADMIN_NAME || "Creative Monk Super Admin",
-        }
-      : null,
-    seoAdminEmail && seoAdminPassword
-      ? {
-          email: seoAdminEmail,
-          password: seoAdminPassword,
-          role: "seo_admin",
-          name: process.env.SEO_ADMIN_NAME || "Creative Monk SEO Expert",
-        }
-      : null,
-  ].filter(Boolean);
+    {
+      email,
+      password,
+      role: "super_admin",
+      name: process.env.SUPER_ADMIN_NAME || "Creative Monk Admin",
+    },
+  ];
 }
 
 function findAdminUserByEmail(email) {
