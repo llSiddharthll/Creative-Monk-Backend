@@ -22,12 +22,12 @@ const SECTIONS = {
   hero: {
     status: "Now booking · 3 founder slots open for Q3",
     eyebrow: "Independent creative studio · est. 2018",
-    lineA: "Bold brands.",
-    lineB: "Built fast,",
-    accent: "built to lead.",
-    lineC: "",
+    lineA: "We design",
+    lineB: "BRANDS",
+    accent: "that move",
+    lineC: "markets.",
     lede:
-      "Identity, websites, and growth marketing — engineered together for ambitious brands ready to define the category.",
+      "Identity, websites, and growth marketing — engineered together for ambitious brands ready to lead their category.",
     primary: { label: "Start a project", href: "/contact" },
     secondary: { label: "View selected work", href: "/portfolio" },
     diaryEntries: [],
